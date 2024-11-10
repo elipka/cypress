@@ -14,20 +14,17 @@ jobs:
 
     services:
       docker:
-        image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
-        options: --entrypoint "/bin/bash"  # Встановлюємо entrypoint, щоб Docker міг прийняти команду
+        image: cypress/included:12.3.0  
+        options: --entrypoint "/bin/bash"  
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
 
       - name: Run Cypress tests in Docker container
         run: |
           docker run --rm \
             -v ${{ github.workspace }}:/e2e \
             -w /e2e \
-            cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1 \
-            cypress run
+            cypress/included:12.3.0 \
+            cypress run  
