@@ -3,10 +3,10 @@ name: Cypress Tests in Docker
 on:
   push:
     branches:
-      - main   
+      - task17  
   pull_request:
     branches:
-      - main   
+      - task17
 
 jobs:
   cypress-tests:
