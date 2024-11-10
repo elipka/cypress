@@ -1,0 +1,16 @@
+services:
+  cypress:
+    image: cypress/included:9.3.1
+    container_name: cypress_tests
+    working_dir: /tests
+    volumes:
+      - "D:/AQA/cprs:/tests"  # Змонтуйте всю директорію для доступу до всіх файлів Cypress
+    entrypoint: ["npx", "cypress", "run", "--browser", "firefox"]
+    environment:
+      - CYPRESS_baseUrl=https://qauto.forstudy.space
+    networks:
+      - cypress_network
+
+networks:
+  cypress_network:
+    driver: bridge
