@@ -1,5 +1,12 @@
 {
+  "scripts": {
+    "open:qauto1": "cypress open --config-file cypress/config/qauto1.config.js",
+    "open:qauto2": "cypress open --config-file cypress/config/qauto2.config.js",
+    "test:qauto1": "cypress run --config-file cypress/config/qauto1.config.js",
+    "test:qauto2": "cypress run --config-file cypress/config/qauto2.config.js"
+  },
   "devDependencies": {
-    "cypress": "^13.15.1"
+    "cypress": "^13.15.1",
+    "mochawesome": "^7.1.3"
   }
 }

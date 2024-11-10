@@ -1,38 +1,40 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+class GaragePage {
+    login(username, password) {
+        cy.visit(Cypress.config('baseUrl'), {
+            auth: {
+                username: username,
+                password: password,
+            },
+        });
+    }
 
-Cypress.Commands.add('login', (email, password) => {
-    cy.visit('https://qauto.forstudy.space', {
-        auth: {
-            username: 'guest',
-            password: 'welcome2qauto',
-        },
-    });
-    cy.get('button.header_signin').click(); 
-    cy.get('#signinEmail').type(email); 
-    cy.get('#signinPassword').type(password); 
-    cy.contains('button', 'Login').click(); 
-});
+    loginAsGuest() {
+        cy.contains('button', 'Guest log in').click();
+    }
+
+    visit() {
+        cy.visit(`${Cypress.config('baseUrl')}${Cypress.env('loginedUrl')}`);
+    }
+
+    checkUrl() {
+        cy.url().should('eq', `${Cypress.config('baseUrl')}${Cypress.env('loginedUrl')}`);
+    }
+
+    addCar(mileage) {
+        cy.contains('button', 'Add car').click();
+        cy.get('.car-make').should('contain', 'Audi');
+        cy.get('.car-model').should('contain', 'TT');
+        cy.get('.car-mileage').type(mileage);
+        cy.contains('button', 'Add').click();
+    }
+
+    addFuelExpense() {
+        cy.contains('button', 'Add fuel expense').click();
+        cy.get('.fuel-mileage').clear().type(200);
+        cy.get('.fuel-liters').type(200);
+        cy.get('.fuel-cost').type(200);
+        cy.contains('button', 'Add').click();
+    }
+}
+
+export default new GaragePage();
