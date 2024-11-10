@@ -1,40 +1,34 @@
-class GaragePage {
-    login(username, password) {
-        cy.visit(Cypress.config('baseUrl'), {
+describe('Car Creation and Expense Test', () => {
+    let carId;
+
+    beforeEach(() => {
+        cy.visit('https://qauto.forstudy.space', {
             auth: {
-                username: username,
-                password: password,
+                username: 'guest',
+                password: 'welcome2qauto',
             },
         });
-    }
 
-    loginAsGuest() {
-        cy.contains('button', 'Guest log in').click();
-    }
+        cy.contains('button', 'Guest log in').should('be.visible').click();
 
-    visit() {
-        cy.visit(`${Cypress.config('baseUrl')}${Cypress.env('loginedUrl')}`);
-    }
+        cy.intercept('POST', '/api/cars').as('createCar');
 
-    checkUrl() {
-        cy.url().should('eq', `${Cypress.config('baseUrl')}${Cypress.env('loginedUrl')}`);
-    }
+        cy.get('button.btn.btn-primary').not('[disabled]').click();
+        cy.get('input.form-control').type('100');
 
-    addCar(mileage) {
-        cy.contains('button', 'Add car').click();
-        cy.get('.car-make').should('contain', 'Audi');
-        cy.get('.car-model').should('contain', 'TT');
-        cy.get('.car-mileage').type(mileage);
-        cy.contains('button', 'Add').click();
-    }
+        cy.xpath('/html/body/ngb-modal-window/div/div/app-add-car-modal/div[3]/button[2]').click();
 
-    addFuelExpense() {
-        cy.contains('button', 'Add fuel expense').click();
-        cy.get('.fuel-mileage').clear().type(200);
-        cy.get('.fuel-liters').type(200);
-        cy.get('.fuel-cost').type(200);
-        cy.contains('button', 'Add').click();
-    }
-}
+        cy.wait('@createCar').then((interception) => {
+            carId = interception.response.body.id;
+        });
+    });
 
-export default new GaragePage();
+    it('should create a car and add an expense using API', () => {
+        const expenseData = {
+            amount: 500,
+            date: '2024-11-10',
+        };
+
+        cy.createExpense(carId, expenseData);
+    });
+});
